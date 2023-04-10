@@ -50,6 +50,24 @@ function displayHint (description) {
 	document.querySelector('.menu').append(hintElement);
 }
 
+function keyboardGeneration () {
+	let keyboard = document.querySelector('.keyboard');
+	keyboard.innerHTML = '';
+
+	['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+		.forEach((letter) => {
+			let button = document.createElement('button');
+
+			button.value = letter;
+			button.innerText = letter;
+			button.style.gridArea = letter;
+
+			button.addEventListener('click', handleKeyboardClick, { once: true });
+
+			keyboard.append(button);
+		});
+}
+
 function drawLine (startX, startY, endX, endY) {
 	canvasContext.moveTo(startX, startY);
 	canvasContext.lineTo(endX, endY);
