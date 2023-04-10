@@ -39,3 +39,13 @@ body, .head { align-items: center; }
 	 stroke: var(--board-color);
 	 stroke-width: 6px;
 }
+
+.hangman {
+	margin: 0 0 10px;
+	position: relative;
+	z-index: -1;
+	background-color: var(--board-color);
+	border: 3px solid var(--bg-color);
+	border-radius: 3px;
+	outline: 3px solid var(--board-color);
+}
