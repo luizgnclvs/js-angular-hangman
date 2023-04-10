@@ -98,6 +98,7 @@ body, .head, .word, .word *, .customize, .customize label { align-items: center;
 }
 
 .customize-wrapper { grid-area: customize; }
+.keyboard-wrapper { grid-area: keyboard; }
 
 .customize {
 	gap: 10px;
@@ -121,7 +122,7 @@ body, .head, .word, .word *, .customize, .customize label { align-items: center;
 .color-picker::-webkit-color-swatch-wrapper { padding: 0; }
 .color-picker::-webkit-color-swatch { border: none; }
 
-.reset {
+.reset, .keyboard button {
 	appearance: none;
 	padding: 4px 8px;
 	font-size: 1.2rem;
@@ -137,9 +138,25 @@ body, .head, .word, .word *, .customize, .customize label { align-items: center;
 	cursor: pointer;
 }
 
-.reset:hover {
+.reset:hover, .keyboard button:hover {
 	color: var(--bg-color);
 	background-color: var(--board-color);
 	border-color: var(--bg-color);
 	outline: 2px solid var(--board-color);
+}
+
+.keyboard {
+	display: grid;
+	grid-template-areas:
+		"a b c d e f g h i j"
+		"k l m n o p q r s t"
+		". . u v w x y z . ."
+	;
+	gap: 10px 10px;
+}
+
+.keyboard button {
+	width: 2.5rem;
+	height: 2.5rem;
+	font-size: 1.75rem;
 }
