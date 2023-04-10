@@ -11,9 +11,10 @@ body {
 	background-color: var(--bg-color);
 }
 
-body, .head { display: flex; }
+body, .head, .word, .word * { display: flex; }
 body { flex-direction: column; }
-body, .head { align-items: center; }
+body, .head, .word, .word * { align-items: center; }
+.word span { justify-content: center; }
 
 .head img { height: 200px; }
 
@@ -48,4 +49,39 @@ body, .head { align-items: center; }
 	border: 3px solid var(--bg-color);
 	border-radius: 3px;
 	outline: 3px solid var(--board-color);
+}
+
+.word {
+	height: fit-content;
+	min-height: 85px;
+	margin: 0 0 15px;
+	flex-wrap: wrap;
+	font-size: 3rem;
+	text-transform: uppercase;
+	text-align: center;
+	color: var(--board-color);
+	user-select: none;
+}
+
+.word span {
+	width: 3.5rem;
+	margin: 0 7px;
+	position: relative;
+	z-index: 1;
+	font-size: 4rem;
+	color: transparent;
+}
+
+.word span.guessed { color: var(--board-color); }
+
+.word span:not(.whitespace)::before {
+	content: '';
+	width: calc(100% + 4px);
+	height: 5px;
+	position: absolute;
+	left: -2px;
+	bottom: 10px;
+	z-index: -1;
+	background-color: var(--board-color);
+	border-radius: 10px;
 }
