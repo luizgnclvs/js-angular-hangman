@@ -8,8 +8,7 @@ const boardColorInput = document.getElementById('board-color');
 
 const wordElement = document.querySelector('.word');
 
-let word;
-let characterElements = [];
+const characterElements = [];
 
 let gameStart = false;
 let mistakes = 0;
@@ -24,7 +23,7 @@ async function requestWord () {
 		const description = await requestDescription(result.word);
 
 		if (description && isDescriptionValid(description)) {
-			word = result.word;
+			generateCharacters(result.word)
 			displayHint(description);
 		} else requestWord();
 	}
@@ -57,6 +56,70 @@ function treatDescription (description) {
 		.replace(/]/g, '')
 		.toLowerCase()
 		.trim();
+}
+
+function generateCharacters (word) {
+	wordElement.innerHTML = '';
+	characterElements = [];
+
+	wordElement.value = wordObject.id;
+
+	word.split('').forEach((character) => {
+		if (character !== ' ') {
+			character = character.toLowerCase();
+
+			let value = characterMatch(character);
+	
+			let spanElement = document.createElement('span');
+	
+			spanElement.value = value;
+			spanElement.innerText = character;
+	
+			wordElement.append(spanElement);
+			characterElements.push(spanElement);
+		} else {
+			let spanElement = document.createElement('span');
+			spanElement.classList.add('whitespace');
+
+			wordElement.append(spanElement);
+		}
+	});
+}
+
+function characterMatch (character) {
+	let characterValue;
+	let isThereMatch = false;
+
+	for (const matchGroup of getCharacterMatchGroups()) {
+		if (isThereMatch) break;
+
+		for (const matchCharacter of matchGroup) {
+			if (character === matchCharacter) {
+				characterValue = matchGroup[0];
+				isThereMatch = true;
+
+				break;
+			}
+		}
+	}
+
+	if (!isThereMatch) characterValue = character;
+
+		return characterValue;
+}
+
+function getCharacterMatchGroups () {
+	const letterA = ['a', 'á', 'à', 'ã', 'â'];
+	const letterE = ['e', 'é', 'ê'];
+	const letterI = ['i', 'í'];
+	const letterO = ['o', 'ó', 'õ', 'ô'];
+	const letterU = ['u', 'ú'];
+	const letterC = ['c', 'ç'];
+	const letterN = ['n', 'ñ'];
+
+		return [
+			letterA, letterE, letterI, letterO, letterU, letterC, letterN
+		];
 }
 
 function displayHint (description) {
