@@ -9,7 +9,6 @@ const boardColorInput = document.getElementById('board-color');
 const wordElement = document.querySelector('.word');
 
 let word;
-let hint;
 let characterElements = [];
 
 let gameStart = false;
@@ -26,7 +25,7 @@ async function requestWord () {
 
 		if (description && isDescriptionValid(description)) {
 			word = result.word;
-			hint = description;	
+			displayHint(description);
 		} else requestWord();
 	}
 }
@@ -40,7 +39,16 @@ async function requestDescription (word) {
 	} else return null;
 }
 
-requestWord()
+function displayHint (description) {
+	if (document.querySelector('.hint'))
+		document.querySelector('.hint').remove();
+
+	const hintElement = document.createElement('p');
+	hintElement.innerText = `hint: ${description}`;
+	hintElement.classList.add('hint');
+
+	document.querySelector('.menu').append(hintElement);
+}
 
 function treatDescription (description) {
 	return description
@@ -61,3 +69,5 @@ function treatDescription (description) {
 function isDescriptionValid (description) {
 	return description.length >= 6 && description.length <= 30;
 }
+
+requestWord();
