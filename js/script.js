@@ -10,10 +10,19 @@ const wordElement = document.querySelector('.word');
 
 const characterElements = [];
 
-let gameStart = false;
-let mistakes = 0;
+let gameOngoing = false;
+let wrongGuesses = 0;
 
 let canvasContext;
+
+function newGame () {
+	gameOngoing = true;
+	wrongGuesses = 0;
+
+	requestWord();
+	keyboardGeneration();
+	hangmanInit();
+}
 
 async function requestWord () {
 	const response = await fetch(`${baseURL}/random`);
@@ -23,7 +32,7 @@ async function requestWord () {
 		const description = await requestDescription(result.word);
 
 		if (description && isDescriptionValid(description)) {
-			generateCharacters(result.word)
+			generateCharacters(result.word);
 			displayHint(description);
 		} else requestWord();
 	}
@@ -34,41 +43,19 @@ async function requestDescription (word) {
 
 	if (response.ok) {
 		const result = await response.json();
-		return treatDescription(result[0].xml);
+			return treatDescription(result[0].xml);
 	} else return null;
-}
-
-function isDescriptionValid (description) {
-	return description.length >= 6 && description.length <= 30;
-}
-
-function treatDescription (description) {
-	return description
-		.split('def>')[1]
-		.split('.')[0]
-		.split(',')[0]
-		.split(';')[0]
-		.split(':')[0]
-		.split('^')[0]
-		.replace(/\n/g, ' ')
-		.replace(/_/g, '')
-		.replace(/\[/g, '')
-		.replace(/]/g, '')
-		.toLowerCase()
-		.trim();
 }
 
 function generateCharacters (word) {
 	wordElement.innerHTML = '';
-	characterElements = [];
-
-	wordElement.value = wordObject.id;
+	characterElements.length = 0;
 
 	word.split('').forEach((character) => {
-		if (character !== ' ') {
+		if (character !== ' ' && character !== '-') {
 			character = character.toLowerCase();
 
-			let value = characterMatch(character);
+			let value = matchCharacter(character);
 	
 			let spanElement = document.createElement('span');
 	
@@ -86,7 +73,7 @@ function generateCharacters (word) {
 	});
 }
 
-function characterMatch (character) {
+function matchCharacter (character) {
 	let characterValue;
 	let isThereMatch = false;
 
@@ -126,11 +113,33 @@ function displayHint (description) {
 	if (document.querySelector('.hint'))
 		document.querySelector('.hint').remove();
 
+
+
 	const hintElement = document.createElement('p');
 	hintElement.innerText = `hint: ${description}`;
 	hintElement.classList.add('hint');
 
 	document.querySelector('.menu').append(hintElement);
+}
+
+function isDescriptionValid (description) {
+	return description.length >= 6 && description.length <= 30;
+}
+
+function treatDescription (description) {
+	return description
+		.split('def>')[1]
+		.split('.')[0]
+		.split(',')[0]
+		.split(';')[0]
+		.split(':')[0]
+		.split('^')[0]
+		.replace(/\n/g, ' ')
+		.replace(/_/g, '')
+		.replace(/\[/g, '')
+		.replace(/]/g, '')
+		.toLowerCase()
+		.trim();
 }
 
 function keyboardGeneration () {
@@ -145,20 +154,59 @@ function keyboardGeneration () {
 			button.innerText = letter;
 			button.style.gridArea = letter;
 
-			button.addEventListener('click', handleKeyboardClick, { once: true });
+			button.addEventListener('click', keyboardClick, { once: true });
 
 			keyboard.append(button);
 		});
 }
 
-function drawLine (startX, startY, endX, endY) {
-	canvasContext.moveTo(startX, startY);
-	canvasContext.lineTo(endX, endY);
-	canvasContext.stroke();
+function keyboardClick (event) {
+	if (gameOngoing) {
+		event.target.classList.add('disabled');
+		event.target.innerHTML = '<span>✖</span>';
+
+		let isThereMatch = false;
+
+		characterElements.forEach((characterObject) => {
+			if (characterObject.value === event.target.value) {
+				characterObject.classList.add('guessed');
+				isThereMatch = true;
+			}
+		});
+
+		if (isThereMatch) checkWordCompletion();
+		else wrongGuess();
+	}
+}
+
+function checkWordCompletion () {
+	let isThereUnguessedChar = false;
+
+	characterElements.forEach((characterObject) => {
+		if (!characterObject.classList.contains('guessed'))
+			isThereUnguessedChar = true;
+	});
+
+	if (!isThereUnguessedChar) victory();
+}
+
+function victory () {
+	wordElement.innerHTML = 'Congratulations! You\'ve got it!';
+	gameOngoing = false;
+}
+
+function loss () {
+	wordElement.innerHTML = 'Better luck next time :/';
+	gameOngoing = false;
+}
+
+function wrongGuess () {
+	++wrongGuesses;
+	hangmanDrawing();
 }
 
 function hangmanInit () {
-	canvasContext = document.querySelector('.hangman').getcanvasContext('2d');
+	canvasContext = document.querySelector('.hangman').getContext('2d');
 
 	canvasContext.beginPath();
 	canvasContext.lineWidth = 3;
@@ -173,20 +221,26 @@ function hangmanInit () {
 }
 
 function hangmanDrawing () {
-	if (mistakes > 0) {
+	if (wrongGuesses > 0) {
 		canvasContext.beginPath();
 		canvasContext.arc(75, 30, 10, 0, Math.PI * 2, true);
 		canvasContext.stroke();
 
-		if (mistakes > 1) drawLine(75, 40, 75, 80);
-		if (mistakes > 2) drawLine(75, 50, 50, 75);
-		if (mistakes > 3) drawLine(75, 50, 100, 75);
-		if (mistakes > 4) drawLine(75, 80, 50, 110);
-		if (mistakes > 5) {
+		if (wrongGuesses > 1) drawLine(75, 40, 75, 80);
+		if (wrongGuesses > 2) drawLine(75, 50, 50, 75);
+		if (wrongGuesses > 3) drawLine(75, 50, 100, 75);
+		if (wrongGuesses > 4) drawLine(75, 80, 50, 110);
+		if (wrongGuesses > 5) {
 			drawLine(75, 80, 100, 110);
-			handleLoss();
+			loss();
 		}
 	}
+}
+
+function drawLine (startX, startY, endX, endY) {
+	canvasContext.moveTo(startX, startY);
+	canvasContext.lineTo(endX, endY);
+	canvasContext.stroke();
 }
 
 function colorChange (property, value) {
@@ -220,4 +274,20 @@ function storedColors () {
 	}
 }
 
-requestWord();
+window.addEventListener('DOMContentLoaded', storedColors);
+window.addEventListener('DOMContentLoaded', keyboardGeneration);
+window.addEventListener('DOMContentLoaded', hangmanInit);
+
+newGameButton.addEventListener('click', newGame);
+resetButton.addEventListener('click', resetColors);
+
+[bgColorInput, boardColorInput].forEach((item) => {
+	item.addEventListener('input', (event) => {
+		colorChange(event.target.id, event.target.value);
+	});
+});	
+
+bgColorInput.addEventListener('input', () => {
+	hangmanInit();
+	hangmanDrawing();
+});

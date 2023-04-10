@@ -94,7 +94,7 @@ body, .head, .word, .word *, .customize, .customize label, .menu { align-items: 
 		"customize keyboard keyboard menu"
 	;
 	place-items: center;
-	gap: 15px;
+	gap: 25px;
 }
 
 .customize-wrapper { grid-area: customize; }
@@ -123,14 +123,14 @@ body, .head, .word, .word *, .customize, .customize label, .menu { align-items: 
 .color-picker::-webkit-color-swatch-wrapper { padding: 0; }
 .color-picker::-webkit-color-swatch { border: none; }
 
-.reset, .keyboard button, .new-game {
+.reset, .new-game {
 	appearance: none;
 	padding: 4px 8px;
 	font-size: 1.2rem;
 	font-weight: bold;
 }
 
-.reset, .new-game {
+.reset, .keyboard button, .new-game {
 	text-transform: uppercase;
 	color: var(--board-color);
 	background-color: var(--bg-color);
@@ -169,10 +169,11 @@ body, .head, .word, .word *, .customize, .customize label, .menu { align-items: 
 }
 
 .hint {
+	width: 150px;
 	margin: 0;
 	font-size: 1.2rem;
-	display: inline;
 	font-weight: bold;
+	text-align: center;
 	text-transform: capitalize;
 	color: var(--board-color);
 }
