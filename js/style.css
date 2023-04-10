@@ -11,10 +11,10 @@ body {
 	background-color: var(--bg-color);
 }
 
-body, .head, .word, .word *, .customize, .customize div, .customize label { display: flex; }
-body, .customize, .customize div { flex-direction: column; }
-body, .head, .word, .word *, .customize, .customize label { align-items: center; }
-.word span, .customize { justify-content: center; }
+body, .head, .word, .word *, .customize, .customize div, .customize label, .menu { display: flex; }
+body, .customize, .customize div, .menu { flex-direction: column; }
+body, .head, .word, .word *, .customize, .customize label, .menu { align-items: center; }
+.word span, .customize, .menu-wrapper { justify-content: center; }
 
 .head img { height: 200px; }
 
@@ -99,6 +99,7 @@ body, .head, .word, .word *, .customize, .customize label { align-items: center;
 
 .customize-wrapper { grid-area: customize; }
 .keyboard-wrapper { grid-area: keyboard; }
+.menu-wrapper { grid-area: menu; }
 
 .customize {
 	gap: 10px;
@@ -122,14 +123,14 @@ body, .head, .word, .word *, .customize, .customize label { align-items: center;
 .color-picker::-webkit-color-swatch-wrapper { padding: 0; }
 .color-picker::-webkit-color-swatch { border: none; }
 
-.reset, .keyboard button {
+.reset, .keyboard button, .new-game {
 	appearance: none;
 	padding: 4px 8px;
 	font-size: 1.2rem;
 	font-weight: bold;
 }
 
-.reset {
+.reset, .new-game {
 	text-transform: uppercase;
 	color: var(--board-color);
 	background-color: var(--bg-color);
@@ -138,7 +139,7 @@ body, .head, .word, .word *, .customize, .customize label { align-items: center;
 	cursor: pointer;
 }
 
-.reset:hover, .keyboard button:hover {
+.reset:hover, .keyboard button:hover, .new-game:hover {
 	color: var(--bg-color);
 	background-color: var(--board-color);
 	border-color: var(--bg-color);
@@ -159,4 +160,35 @@ body, .head, .word, .word *, .customize, .customize label { align-items: center;
 	width: 2.5rem;
 	height: 2.5rem;
 	font-size: 1.75rem;
+}
+
+.menu {
+	width: fit-content;
+	min-width: 140px;
+	gap: 10px;
+}
+
+.hint {
+	margin: 0;
+	font-size: 1.2rem;
+	display: inline;
+	font-weight: bold;
+	text-transform: capitalize;
+	color: var(--board-color);
+}
+
+.disabled {
+	color: var(--bg-color) !important;
+	background-color: var(--board-color) !important;
+	cursor: default !important;
+}
+
+.disabled:hover {
+	border-color: var(--board-color) !important;
+	outline: none !important;
+}
+
+.disabled span {
+	position: relative;
+	top: -4px;
 }
