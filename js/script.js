@@ -39,6 +39,26 @@ async function requestDescription (word) {
 	} else return null;
 }
 
+function isDescriptionValid (description) {
+	return description.length >= 6 && description.length <= 30;
+}
+
+function treatDescription (description) {
+	return description
+		.split('def>')[1]
+		.split('.')[0]
+		.split(',')[0]
+		.split(';')[0]
+		.split(':')[0]
+		.split('^')[0]
+		.replace(/\n/g, ' ')
+		.replace(/_/g, '')
+		.replace(/\[/g, '')
+		.replace(/]/g, '')
+		.toLowerCase()
+		.trim();
+}
+
 function displayHint (description) {
 	if (document.querySelector('.hint'))
 		document.querySelector('.hint').remove();
@@ -106,24 +126,35 @@ function hangmanDrawing () {
 	}
 }
 
-function treatDescription (description) {
-	return description
-		.split('def>')[1]
-		.split('.')[0]
-		.split(',')[0]
-		.split(';')[0]
-		.split(':')[0]
-		.split('^')[0]
-		.replace(/\n/g, ' ')
-		.replace(/_/g, '')
-		.replace(/\[/g, '')
-		.replace(/]/g, '')
-		.toLowerCase()
-		.trim();
+function colorChange (property, value) {
+	document.querySelector(':root').style.setProperty(`--${property}`, value);
+	localStorage.setItem(property, value);
 }
 
-function isDescriptionValid (description) {
-	return description.length >= 6 && description.length <= 30;
+function resetColors () {
+	colorChange('bg-color', '#292929');
+	colorChange('board-color', '#969696');
+
+	bgColorInput.value = '#292929';
+	boardColorInput.value  ='#969696';
+
+	hangmanInit();
+	hangmanDrawing();
+}
+
+function storedColors () {
+	let bgColor = localStorage.getItem('bg-color');
+	let boardColor = localStorage.getItem('board-color');
+
+	if (bgColor) {
+		document.querySelector(':root').style.setProperty('--bg-color', bgColor);
+		bgColorInput.value = bgColor;
+	}
+
+	if (boardColor) {
+		document.querySelector(':root').style.setProperty('--board-color', boardColor);
+		boardColorInput.value = boardColor;
+	}
 }
 
 requestWord();
