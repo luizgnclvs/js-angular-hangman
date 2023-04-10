@@ -120,3 +120,26 @@ body, .head, .word, .word *, .customize, .customize label { align-items: center;
 
 .color-picker::-webkit-color-swatch-wrapper { padding: 0; }
 .color-picker::-webkit-color-swatch { border: none; }
+
+.reset {
+	appearance: none;
+	padding: 4px 8px;
+	font-size: 1.2rem;
+	font-weight: bold;
+}
+
+.reset {
+	text-transform: uppercase;
+	color: var(--board-color);
+	background-color: var(--bg-color);
+	border: 2px solid var(--board-color);
+	border-radius: 2px;
+	cursor: pointer;
+}
+
+.reset:hover {
+	color: var(--bg-color);
+	background-color: var(--board-color);
+	border-color: var(--bg-color);
+	outline: 2px solid var(--board-color);
+}
