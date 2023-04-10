@@ -50,6 +50,44 @@ function displayHint (description) {
 	document.querySelector('.menu').append(hintElement);
 }
 
+function drawLine (startX, startY, endX, endY) {
+	canvasContext.moveTo(startX, startY);
+	canvasContext.lineTo(endX, endY);
+	canvasContext.stroke();
+}
+
+function hangmanInit () {
+	canvasContext = document.querySelector('.hangman').getcanvasContext('2d');
+
+	canvasContext.beginPath();
+	canvasContext.lineWidth = 3;
+	canvasContext.strokeStyle = localStorage.getItem('bg-color');
+	canvasContext.clearRect(0, 0, canvasContext.canvas.width, canvasContext.canvas.height);
+
+	drawLine(20, 145, 60, 145);
+	drawLine(40, 5, 40, 145);
+	drawLine(38, 5, 75, 5);
+	drawLine(75, 3, 75, 20);
+	drawLine(40, 25, 60, 5);
+}
+
+function hangmanDrawing () {
+	if (mistakes > 0) {
+		canvasContext.beginPath();
+		canvasContext.arc(75, 30, 10, 0, Math.PI * 2, true);
+		canvasContext.stroke();
+
+		if (mistakes > 1) drawLine(75, 40, 75, 80);
+		if (mistakes > 2) drawLine(75, 50, 50, 75);
+		if (mistakes > 3) drawLine(75, 50, 100, 75);
+		if (mistakes > 4) drawLine(75, 80, 50, 110);
+		if (mistakes > 5) {
+			drawLine(75, 80, 100, 110);
+			handleLoss();
+		}
+	}
+}
+
 function treatDescription (description) {
 	return description
 		.split('def>')[1]
