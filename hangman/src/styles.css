@@ -1,1 +1,14 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+	font-family:'Courier New', Courier, monospace;
+	user-select: none;
+
+	--bg-color: #292929;
+	--board-color: #969696;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: var(--bg-color);
+}
