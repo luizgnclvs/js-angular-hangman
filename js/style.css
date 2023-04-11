@@ -16,7 +16,7 @@ body, .customize, .customize div, .menu { flex-direction: column; }
 body, .head, .word, .word *, .customize, .customize label, .menu { align-items: center; }
 .word span, .customize, .menu-wrapper { justify-content: center; }
 
-.head img { height: 200px; }
+.head img { height: 190px; }
 
 .head svg {
 	height: 5rem;
